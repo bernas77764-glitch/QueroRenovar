@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Brand: warm clay, used for actions and selected states. */
+  --color-brand-50: #fdf5ef;
+  --color-brand-100: #fae7d8;
+  --color-brand-200: #f3ccb0;
+  --color-brand-300: #eaa97f;
+  --color-brand-500: #d4663a;
+  --color-brand-600: #c2512a;
+  --color-brand-700: #a24122;
+  --color-brand-800: #83361f;
+
+  /* Ink: text and borders. */
+  --color-ink-900: #1f2428;
+  --color-ink-700: #3d454c;
+  --color-ink-500: #65707a;
+  --color-ink-300: #c3cad1;
+  --color-ink-200: #e2e6ea;
+  --color-ink-100: #f0f2f4;
+
+  --color-surface: #faf8f5;
+
+  /* Status: pending (needs confirmation) and ok (complete). Never used alone — always with text or an icon. */
+  --color-pending-100: #fff3d1;
+  --color-pending-700: #7a5200;
+  --color-ok-100: #e2f4e8;
+  --color-ok-700: #1f6b3a;
+}
+
+html {
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-surface);
+  color: var(--color-ink-900);
+  font-family: var(--font-sans);
+}
+
+/* Keep the native dialog centred; preflight resets margins. */
+dialog {
+  margin: auto;
+}

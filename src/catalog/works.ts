@@ -1,0 +1,222 @@
+import type { Work } from "./types";
+
+/*
+ * Works catalog (documento-base §6 and §7). Labels say what the client gets;
+ * technical detail goes in `help`. Works are defined once and referenced by the
+ * room types that offer them (rooms.ts), which may override the label.
+ *
+ * No prices here. `unit` records how the estimator will measure the work;
+ * `requiresAssessment` marks works that cannot have a rule and must never be
+ * counted as free.
+ */
+export const WORKS: Work[] = [
+  {
+    id: "pavimento",
+    label: "Trocar pavimento",
+    help: "Remoção ou cobertura do pavimento atual e aplicação de um novo.",
+    unit: "m2",
+    questions: ["pavimento-ambito", "pavimento-remocao", "materiais-fornecimento"],
+    specialties: ["pavimentos-revestimentos"],
+  },
+  {
+    id: "revestimentos-parede",
+    label: "Renovar revestimentos de parede",
+    help: "Azulejos ou outros revestimentos aplicados nas paredes.",
+    unit: "m2",
+    questions: ["revestimentos-ambito", "materiais-fornecimento"],
+    specialties: ["pavimentos-revestimentos"],
+  },
+  {
+    id: "pintura",
+    label: "Pintar",
+    help: "Pintura de paredes e/ou teto, com preparação ligeira das superfícies.",
+    unit: "m2",
+    questions: ["pintura-ambito", "pintura-superficies"],
+    specialties: ["pintura"],
+  },
+  {
+    id: "reparar-superficies",
+    label: "Reparar superfícies",
+    help: "Fissuras, buracos ou zonas degradadas em paredes e tetos. Exige avaliação no local.",
+    unit: "avaliacao",
+    requiresAssessment: true,
+    questions: [],
+    specialties: ["pintura"],
+  },
+  {
+    id: "teto-renovar",
+    label: "Renovar teto",
+    help: "Reparação, novo teto ou pintura do teto.",
+    unit: "m2",
+    questions: ["pintura-superficies"],
+    specialties: ["pintura", "gesso-cartonado"],
+  },
+  {
+    id: "teto-falso",
+    label: "Colocar teto falso",
+    help: "Teto em gesso cartonado, útil para esconder instalações e integrar iluminação.",
+    unit: "m2",
+    questions: [],
+    specialties: ["gesso-cartonado"],
+  },
+  {
+    id: "moveis-cozinha",
+    label: "Substituir móveis",
+    help: "Móveis inferiores e superiores da cozinha.",
+    unit: "ml",
+    questions: ["moveis-cozinha-opcao", "moveis-cozinha-comprimento", "materiais-fornecimento"],
+    specialties: ["carpintaria"],
+  },
+  {
+    id: "bancada",
+    label: "Substituir bancada",
+    unit: "ml",
+    questions: ["bancada-comprimento", "bancada-material", "materiais-fornecimento"],
+    specialties: ["bancadas"],
+  },
+  {
+    id: "lava-loica-torneira",
+    label: "Trocar lava-loiça e torneira",
+    unit: "conjunto",
+    questions: ["materiais-fornecimento"],
+    specialties: ["canalizacao"],
+  },
+  {
+    id: "canalizacao",
+    label: "Alterar canalização",
+    help: "Pontos de água e de esgoto.",
+    unit: "un",
+    questions: [],
+    specialties: ["canalizacao"],
+  },
+  {
+    id: "eletricidade",
+    label: "Alterar tomadas e iluminação",
+    unit: "un",
+    questions: ["eletricidade-ambito"],
+    specialties: ["eletricidade"],
+  },
+  {
+    id: "eletrodomesticos",
+    label: "Instalar eletrodomésticos",
+    help: "Ligação e encastre de forno, placa, exaustor e máquinas.",
+    unit: "un",
+    questions: ["materiais-fornecimento"],
+    specialties: ["eletricidade", "canalizacao"],
+  },
+  {
+    id: "sanitarios",
+    label: "Substituir sanita, lavatório ou bidé",
+    unit: "un",
+    questions: ["wc-disposicao", "materiais-fornecimento"],
+    specialties: ["canalizacao"],
+  },
+  {
+    id: "movel-wc",
+    label: "Substituir móvel de casa de banho",
+    unit: "un",
+    questions: ["materiais-fornecimento"],
+    specialties: ["carpintaria", "canalizacao"],
+  },
+  {
+    id: "banheira-duche",
+    label: "Trocar banheira por duche",
+    help: "Remoção da banheira e instalação de uma zona de duche.",
+    unit: "conjunto",
+    questions: ["wc-disposicao", "materiais-fornecimento"],
+    implies: ["canalizacao", "impermeabilizacao", "revestimentos-parede"],
+    specialties: ["canalizacao", "impermeabilizacao", "pavimentos-revestimentos"],
+  },
+  {
+    id: "base-resguardo",
+    label: "Substituir base e resguardo de duche",
+    unit: "conjunto",
+    questions: ["materiais-fornecimento"],
+    specialties: ["canalizacao"],
+  },
+  {
+    id: "torneiras",
+    label: "Trocar torneiras",
+    unit: "un",
+    questions: ["materiais-fornecimento"],
+    specialties: ["canalizacao"],
+  },
+  {
+    id: "ventilacao",
+    label: "Melhorar ventilação",
+    help: "Extração mecânica ou melhoria da ventilação existente.",
+    unit: "un",
+    questions: [],
+    specialties: ["ventilacao"],
+  },
+  {
+    id: "impermeabilizacao",
+    label: "Impermeabilizar",
+    help: "Proteção contra infiltrações nas zonas de água.",
+    unit: "m2",
+    questions: [],
+    specialties: ["impermeabilizacao"],
+  },
+  {
+    id: "portas-rodapes",
+    label: "Substituir portas e rodapés",
+    unit: "un",
+    questions: ["materiais-fornecimento"],
+    specialties: ["carpintaria"],
+  },
+  {
+    id: "roupeiro-movel-fixo",
+    label: "Instalar ou renovar roupeiro ou móvel fixo",
+    unit: "ml",
+    questions: ["materiais-fornecimento"],
+    specialties: ["carpintaria"],
+  },
+  {
+    id: "arrumacao",
+    label: "Instalar arrumação",
+    help: "Armários ou estantes fixas.",
+    unit: "ml",
+    questions: ["materiais-fornecimento"],
+    specialties: ["carpintaria"],
+  },
+  {
+    id: "moveis-bancada-lavandaria",
+    label: "Instalar móveis e bancada",
+    unit: "ml",
+    questions: ["materiais-fornecimento"],
+    specialties: ["carpintaria", "bancadas"],
+  },
+  {
+    id: "humidade-avaliar",
+    label: "Avaliar humidade ou ventilação",
+    help: "Problemas de humidade exigem avaliação no local antes de propor trabalhos.",
+    unit: "avaliacao",
+    requiresAssessment: true,
+    questions: [],
+    specialties: ["remodelacao-geral"],
+  },
+  // The two entries below are offered in every room (see worksForRoomType).
+  {
+    id: "outro-trabalho",
+    label: "Outro trabalho",
+    help: "Descreva o que pretende. Será avaliado por um profissional.",
+    unit: "avaliacao",
+    requiresAssessment: true,
+    freeText: true,
+    questions: [],
+    specialties: [],
+  },
+  {
+    id: "ajuda-decidir",
+    label: "Preciso de ajuda a decidir",
+    help: "Indique as suas dúvidas. Um profissional pode sugerir os trabalhos adequados.",
+    unit: "avaliacao",
+    requiresAssessment: true,
+    freeText: true,
+    questions: [],
+    specialties: ["remodelacao-geral"],
+  },
+];
+
+/** Works offered in every room, after the room-specific list. */
+export const EXTRA_WORK_IDS = ["outro-trabalho", "ajuda-decidir"];

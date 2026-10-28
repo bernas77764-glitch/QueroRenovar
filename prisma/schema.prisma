@@ -1,0 +1,215 @@
+// Data model for the platform (documento-base §12), prepared for the next
+// iteration: estimate, contacts, submission and the team's internal area.
+// The client journey in this iteration keeps its state in the browser; nothing
+// is written here yet.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Request lifecycle handled by the team (documento-base §11). "COMPLETED" closes
+/// the follow-up of the request; it does not mean the works were executed.
+enum ProjectStatus {
+  DRAFT
+  RECEIVED
+  IN_REVIEW
+  MATCHING
+  REFERRED
+  COMPLETED
+  CLOSED_NO_MATCH
+}
+
+enum AreaKind {
+  RANGE
+  EXACT
+  UNKNOWN
+}
+
+enum EstimateCompleteness {
+  COMPLETE
+  PARTIAL
+  INSUFFICIENT
+}
+
+enum ReferralStatus {
+  SENT
+  ACCEPTED
+  DECLINED
+  NO_RESPONSE
+}
+
+model Project {
+  id        String        @id @default(cuid())
+  /// Human reference given to the client on confirmation, e.g. "QR-2026-000123".
+  reference String?       @unique
+  status    ProjectStatus @default(DRAFT)
+
+  /// Locality or postal code of the works; the full address is not collected.
+  location     String
+  propertyType String?
+  occupied     String?
+  timeline     String?
+  accessNotes  String?
+
+  /// Client-generated key so a retried submission never creates a duplicate request.
+  idempotencyKey String?   @unique
+  submittedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  rooms         Room[]
+  projectWorks  ProjectWork[]
+  estimates     Estimate[]
+  contact       Contact?
+  referrals     Referral[]
+  internalNotes InternalNote[]
+}
+
+/// Each room is an independent space: two bathrooms are two rows.
+model Room {
+  id        String  @id @default(cuid())
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  sortOrder Int
+
+  /// Catalog room type id, e.g. "casa-de-banho".
+  type        String
+  name        String?
+  description String?
+
+  areaKind         AreaKind
+  areaRangeId      String?
+  areaSquareMeters Decimal? @db.Decimal(7, 2)
+
+  /// Answers to complementary questions, keyed by question id.
+  answers Json   @default("{}")
+  notes   String?
+
+  works SelectedWork[]
+
+  @@index([projectId])
+}
+
+/// A work the client selected in a room.
+model SelectedWork {
+  id      String @id @default(cuid())
+  room    Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  roomId  String
+  /// Catalog work id, e.g. "banheira-duche".
+  workId  String
+  details String?
+
+  @@unique([roomId, workId])
+}
+
+/// A work common to the whole house, with its own scope (not counted per room).
+model ProjectWork {
+  id        String  @id @default(cuid())
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  workId    String
+  details   String?
+
+  @@unique([projectId, workId])
+}
+
+/// A versioned estimate. Later changes to the price table never rewrite what the client saw.
+model Estimate {
+  id        String  @id @default(cuid())
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  version   Int
+
+  catalogVersion String
+  priceTableVersion String
+  completeness   EstimateCompleteness
+
+  /// Per-room and per-work-group lines, assumptions and pending items, as presented.
+  lines       Json
+  assumptions Json
+  exclusions  Json
+  pending     Json
+
+  totalMin Decimal? @db.Decimal(12, 2)
+  totalMax Decimal? @db.Decimal(12, 2)
+  currency String   @default("EUR")
+  /// How VAT was treated in the presented figures, e.g. "excluded" or "included-23".
+  vatMode  String
+
+  createdAt DateTime @default(now())
+
+  @@unique([projectId, version])
+}
+
+/// Contacts are only stored when the client confirms a request for proposals.
+model Contact {
+  id        String  @id @default(cuid())
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String  @unique
+
+  name             String
+  email            String?
+  phone            String?
+  preferredChannel String?
+  /// Marketing consent is separate from the request for proposals.
+  marketingConsent Boolean @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+model Professional {
+  id   String @id @default(cuid())
+  name String
+  /// "empresa" or "profissional".
+  kind String
+
+  /// Catalog specialty ids.
+  specialties  String[]
+  /// Service areas as postal-code prefixes or locality names.
+  serviceAreas String[]
+  /// Project sizes or types accepted, free text until criteria are defined.
+  accepts      String?
+
+  /// Only set when a real verification process was completed.
+  verifiedAt DateTime?
+  active     Boolean   @default(true)
+  notes      String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  referrals Referral[]
+}
+
+/// A request forwarded to a professional. One row per pair, so duplicates are impossible.
+model Referral {
+  id             String         @id @default(cuid())
+  project        Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId      String
+  professional   Professional   @relation(fields: [professionalId], references: [id])
+  professionalId String
+  status         ReferralStatus @default(SENT)
+  channel        String?
+  notes          String?
+  sentAt         DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@unique([projectId, professionalId])
+}
+
+/// Team-only notes; never shown to clients or professionals.
+model InternalNote {
+  id        String   @id @default(cuid())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  author    String
+  body      String
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+}
