@@ -21,7 +21,7 @@ export function Progress({ current }: { current: WizardStepId }) {
           <li
             key={step.id}
             aria-current={i === index ? "step" : undefined}
-            className={`h-1.5 flex-1 rounded-full ${i <= index ? "bg-brand-600" : "bg-ink-200"}`}
+            className={`h-1.5 flex-1 rounded-full ${i <= index ? "bg-brand-500" : "bg-ink-200"}`}
           >
             <span className="sr-only">
               {step.label}

@@ -2,9 +2,9 @@ services:
   db:
     image: postgres:17
     environment:
-      POSTGRES_USER: querrenovar
-      POSTGRES_PASSWORD: querrenovar
-      POSTGRES_DB: querrenovar
+      POSTGRES_USER: querorenovar
+      POSTGRES_PASSWORD: querorenovar
+      POSTGRES_DB: querorenovar
     ports:
       - "5432:5432"
     volumes:

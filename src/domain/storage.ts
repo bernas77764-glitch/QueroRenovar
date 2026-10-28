@@ -5,7 +5,7 @@ import type { Project } from "./project";
  * devices is not promised in the interface until it exists — documento-base §13.
  */
 
-const STORAGE_KEY = "querrenovar.projeto.v1";
+const STORAGE_KEY = "querorenovar.projeto.v1";
 
 export function loadProject(): Project | null {
   try {

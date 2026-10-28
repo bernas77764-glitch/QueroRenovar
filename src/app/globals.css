@@ -3,25 +3,29 @@
 @theme {
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  /* Brand: warm clay, used for actions and selected states. */
-  --color-brand-50: #fdf5ef;
-  --color-brand-100: #fae7d8;
-  --color-brand-200: #f3ccb0;
-  --color-brand-300: #eaa97f;
-  --color-brand-500: #d4663a;
-  --color-brand-600: #c2512a;
-  --color-brand-700: #a24122;
-  --color-brand-800: #83361f;
+  /*
+   * Brand green from the logo (#16a080). It only reaches 3.3:1 against white, so
+   * text and buttons use the darker 600/700 steps (5:1+); 500 is for the logo,
+   * progress bar and other large or decorative uses.
+   */
+  --color-brand-50: #ecf8f4;
+  --color-brand-100: #d3f0e6;
+  --color-brand-200: #a8e0cf;
+  --color-brand-300: #6fc9b0;
+  --color-brand-500: #16a080;
+  --color-brand-600: #0f7d63;
+  --color-brand-700: #0d6e57;
+  --color-brand-800: #0b5847;
 
-  /* Ink: text and borders. */
-  --color-ink-900: #1f2428;
-  --color-ink-700: #3d454c;
-  --color-ink-500: #65707a;
-  --color-ink-300: #c3cad1;
-  --color-ink-200: #e2e6ea;
-  --color-ink-100: #f0f2f4;
+  /* Ink: navy from the logo (#08283d) for text, with neutral steps for borders. */
+  --color-ink-900: #08283d;
+  --color-ink-700: #35505f;
+  --color-ink-500: #627585;
+  --color-ink-300: #bcc8d1;
+  --color-ink-200: #dde5ea;
+  --color-ink-100: #eef2f5;
 
-  --color-surface: #faf8f5;
+  --color-surface: #f6f9f9;
 
   /* Status: pending (needs confirmation) and ok (complete). Never used alone — always with text or an icon. */
   --color-pending-100: #fff3d1;

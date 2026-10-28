@@ -1,4 +1,6 @@
-# Quer Renovar
+# Quero Renovar
+
+<p align="center"><img src="public/logo.png" alt="Quero Renovar" width="360"></p>
 
 Plataforma que liga pessoas que querem remodelar a sua casa a profissionais capazes de executar os trabalhos. O cliente descreve o que pretende renovar, divisão a divisão; a plataforma organiza um resumo dos trabalhos, apresenta uma estimativa indicativa e identifica as especialidades necessárias.
 
