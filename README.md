@@ -27,6 +27,7 @@ O progresso do cliente fica guardado apenas no navegador (`localStorage`). Nada 
 - [Next.js](https://nextjs.org) 16 (App Router) com React 19 e TypeScript
 - Tailwind CSS 4
 - Prisma 7 + PostgreSQL (esquema preparado; ainda sem uso em runtime)
+- Cloudflare Workers via OpenNext, domínio querorenovar.pt
 - Vitest para testes do catálogo e do domínio
 
 ## Começar
@@ -48,6 +49,27 @@ npm run lint        # ESLint
 npm run typecheck   # TypeScript
 npm test            # testes (vitest)
 ```
+
+## Alojamento: Cloudflare Workers
+
+O site corre em Cloudflare Workers através do adaptador [OpenNext](https://opennext.js.org/cloudflare) (`@opennextjs/cloudflare`), com o domínio `querorenovar.pt`. A configuração está em `wrangler.jsonc`, `open-next.config.ts` e `next.config.ts`.
+
+```bash
+npm run preview   # compila e corre o worker localmente (runtime da Cloudflare)
+npm run deploy    # compila e publica (pede login na Cloudflare na primeira vez)
+```
+
+Passos únicos na conta Cloudflare, antes do primeiro deploy:
+
+1. Adicionar o domínio `querorenovar.pt` como *zone* na Cloudflare e apontar os *nameservers* no painel do dominios.pt para os indicados pela Cloudflare.
+2. `npx wrangler login` no computador de quem publica.
+3. `npm run deploy`. As entradas `routes` em `wrangler.jsonc` ligam o worker a `querorenovar.pt` e `www.querorenovar.pt` como *custom domains* (a Cloudflare cria os registos DNS).
+
+Notas:
+
+- **Cache Components** do Next.js 16 estão desativados em `next.config.ts`: não os usamos e não correm de forma fiável no runtime da Cloudflare.
+- **Imagens** usam `unoptimized: true` (só há os ficheiros da marca). Se vierem a existir fotografias dos clientes, ativar o *binding* `images` da Cloudflare.
+- **Base de dados em produção:** o Workers não liga diretamente a PostgreSQL com o cliente clássico. Quando a submissão de pedidos for implementada, as opções são PostgreSQL gerido (Neon, Supabase ou outro) através de **Cloudflare Hyperdrive** com o *driver adapter* do Prisma, ou **Cloudflare D1** (SQLite). O esquema em `prisma/schema.prisma` serve para ambas, com pequenos ajustes de tipos no caso do D1.
 
 ### Base de dados (opcional nesta iteração)
 

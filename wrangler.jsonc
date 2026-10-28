@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "querorenovar",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // Self-reference binding required by the adapter; the service name must match "name".
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "querorenovar"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  },
+  // Domain: add after `wrangler deploy` once the zone querorenovar.pt is on Cloudflare.
+  "routes": [
+    { "pattern": "querorenovar.pt", "custom_domain": true },
+    { "pattern": "www.querorenovar.pt", "custom_domain": true }
+  ]
+}

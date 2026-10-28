@@ -37,6 +37,12 @@ yarn-error.log*
 # prisma generated client
 /src/generated/
 
+# cloudflare (OpenNext build output, local secrets, wrangler state)
+/.open-next/
+/.wrangler/
+.dev.vars*
+/cloudflare-env.d.ts
+
 # vercel
 .vercel
 
