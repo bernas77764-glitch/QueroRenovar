@@ -58,20 +58,22 @@ function RequestSummary() {
 
 function Sent({ reference }: { reference: string }) {
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 py-12 sm:py-20">
-      <Notice tone="ok" title="Pedido enviado">
-        <p>
-          Referência do pedido: <strong>{reference}</strong>
+    <div className="mx-auto w-full max-w-3xl px-3 pb-10 pt-8 sm:px-4 sm:pb-16 sm:pt-14">
+      <div className="rounded-3xl border border-ink-200 bg-white p-5 shadow-xl shadow-ink-900/10 sm:p-8">
+        <Notice tone="ok" title="Pedido enviado">
+          <p>
+            Referência do pedido: <strong>{reference}</strong>
+          </p>
+        </Notice>
+        <h1 className="mt-6 text-2xl font-semibold tracking-tight sm:text-3xl">Obrigado! Já recebemos o seu pedido.</h1>
+        <p className="mt-3 text-ink-700">
+          Vamos analisá-lo e encaminhá-lo para profissionais da sua zona. Será contactado em breve, por telefone ou email,
+          com propostas para a sua remodelação.
         </p>
-      </Notice>
-      <h1 className="mt-6 text-2xl font-semibold tracking-tight sm:text-3xl">Obrigado! Já recebemos o seu pedido.</h1>
-      <p className="mt-3 text-ink-700">
-        Vamos analisá-lo e encaminhá-lo para profissionais da sua zona. Será contactado em breve, por telefone ou email,
-        com propostas para a sua remodelação.
-      </p>
-      <LinkButton href="/" variant="secondary" className="mt-8">
-        Voltar ao início
-      </LinkButton>
+        <LinkButton href="/" variant="secondary" className="mt-8">
+          Voltar ao início
+        </LinkButton>
+      </div>
     </div>
   );
 }
