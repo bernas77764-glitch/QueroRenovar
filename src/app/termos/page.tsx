@@ -4,15 +4,14 @@ import type { ReactNode } from "react";
 export const metadata: Metadata = { title: "Termos e Condições e Política de Privacidade" };
 
 /*
- * Draft text. The company identification below must be filled in, and the
- * whole text reviewed by a lawyer, before it is relied upon. When the terms
+ * Draft text: the NIF and contact email below are still to be confirmed, and
+ * the whole text should be reviewed by a lawyer before it is relied upon. When the terms
  * change, bump TERMS_VERSION in src/lead/store.ts so each request records the
  * version the client accepted.
  */
 const COMPANY = {
-  name: "[Nome da empresa]",
+  name: "QueroRenovar, Lda.",
   nif: "[NIF]",
-  address: "[Morada]",
   email: "[email de contacto]",
 };
 
@@ -35,8 +34,8 @@ export default function TermosPage() {
 
       <Section title="1. Quem somos">
         <p>
-          O serviço Quero Renovar (querorenovar.pt) é explorado por {COMPANY.name}, NIF {COMPANY.nif}, com sede em{" "}
-          {COMPANY.address}. Pode contactar-nos através de {COMPANY.email}.
+          O serviço Quero Renovar (querorenovar.pt) é explorado por {COMPANY.name}, NIF {COMPANY.nif}. Pode
+          contactar-nos através de {COMPANY.email}.
         </p>
       </Section>
 
