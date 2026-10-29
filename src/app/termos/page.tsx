@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 export const metadata: Metadata = { title: "Termos e Condições e Política de Privacidade" };
 
 /*
- * Draft text: the NIF and contact email below are still to be confirmed, and
+ * Draft text: the NIF below is still to be filled in once the company exists, and
  * the whole text should be reviewed by a lawyer before it is relied upon. When the terms
  * change, bump TERMS_VERSION in src/lead/store.ts so each request records the
  * version the client accepted.
@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: "Termos e Condições e Política de 
 const COMPANY = {
   name: "QueroRenovar, Lda.",
   nif: "[NIF]",
-  email: "[email de contacto]",
+  email: "geral@querorenovar.pt",
 };
 
 const UPDATED = "29 de outubro de 2026";
