@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { Button, LinkButton } from "@/components/ui/Button";
-import { TextField } from "@/components/ui/Field";
+import { SelectField, TextField } from "@/components/ui/Field";
 import { Notice } from "@/components/ui/Notice";
-import { CONCELHOS } from "@/lead/concelhos";
+import { concelhosOf, DISTRITOS } from "@/lead/concelhos";
 import { useLead } from "@/lead/LeadProvider";
 import {
   contactIssues,
@@ -18,7 +18,7 @@ import {
 } from "@/lead/request";
 import { StepShell } from "./StepShell";
 
-const EMPTY_CONTACT: Contact = { name: "", email: "", phone: "", municipality: "", acceptedTerms: false };
+const EMPTY_CONTACT: Contact = { name: "", email: "", phone: "", district: "", municipality: "", acceptedTerms: false };
 
 type Status = { kind: "idle" } | { kind: "sending" } | { kind: "error"; message: string } | { kind: "sent"; reference: string };
 
@@ -169,22 +169,31 @@ export function ContactStep() {
             error={visible("phone")}
           />
         </div>
-        <TextField
-          id="contact-municipality"
-          label="Concelho da obra"
-          hint="Onde vai ser feita a remodelação."
-          list="concelhos"
-          autoComplete="off"
-          maxLength={80}
-          value={contact.municipality}
-          onChange={(e) => set({ municipality: e.target.value })}
-          error={visible("municipality")}
-        />
-        <datalist id="concelhos">
-          {CONCELHOS.map((c) => (
-            <option key={c} value={c} />
-          ))}
-        </datalist>
+        <fieldset>
+          <legend className="font-medium">Local da obra</legend>
+          <p className="mt-0.5 text-sm text-ink-500">Onde vai ser feita a remodelação.</p>
+          <div className="mt-2 grid gap-4 sm:grid-cols-2">
+            <SelectField
+              id="contact-district"
+              label="Distrito"
+              placeholder="Escolha o distrito"
+              options={DISTRITOS.map((d) => d.nome)}
+              value={contact.district}
+              onChange={(e) => set({ district: e.target.value, municipality: "" })}
+              error={visible("district")}
+            />
+            <SelectField
+              id="contact-municipality"
+              label="Concelho"
+              placeholder={contact.district ? "Escolha o concelho" : "Escolha primeiro o distrito"}
+              options={concelhosOf(contact.district)}
+              disabled={!contact.district}
+              value={contact.municipality}
+              onChange={(e) => set({ municipality: e.target.value })}
+              error={visible("municipality")}
+            />
+          </div>
+        </fieldset>
 
         {/* Honeypot: hidden from people, filled in by bots. */}
         <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">

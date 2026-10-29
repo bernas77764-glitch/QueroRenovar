@@ -15,7 +15,7 @@ O documento base original do produto está em [`docs/documento-base.md`](docs/do
 | 2. Áreas | `/pedido/areas` | Indica a área de cada espaço: até 10 m², 10 a 20 m², mais de 20 m² ou personalizado (m² exatos) |
 | 3. Trabalhos | `/pedido/trabalhos` | Escolhe os trabalhos; nível de qualidade (económico, médio, premium) ou quantidade onde se aplica; observações opcionais |
 | 4. Urgência | `/pedido/urgencia` | Imediato (até 10 dias), médio prazo (até 30), longo prazo (até 3 meses) ou sem urgência |
-| 5. Contactos | `/pedido/contactos` | Página de agradecimento: nome, email, telefone, concelho da obra, aceitação dos termos e envio |
+| 5. Contactos | `/pedido/contactos` | Página de agradecimento: nome, email, telefone, distrito e concelho da obra (listas ligadas), aceitação dos termos e envio |
 | Termos | `/termos` | Termos e Condições e Política de Privacidade (rascunho: completar a identificação da empresa) |
 
 Até ao envio, as respostas ficam só no navegador (`localStorage`); os contactos nunca são guardados lá. Cada passo valida as suas respostas e, se faltar algo, diz o quê. Abrir um passo sem os anteriores completos leva de volta ao passo em falta.
@@ -26,7 +26,7 @@ O envio faz `POST /api/pedidos`. O servidor volta a validar tudo com as mesmas r
 
 - uma chave por pedido: `pedido:<id do pedido>`;
 - o valor é JSON com o pedido, os contactos, a data de receção, a versão dos termos aceites e um resumo em texto (`summary`) legível sem a aplicação;
-- os metadados da chave têm a referência, a data, o nome, o concelho e a urgência.
+- os metadados da chave têm a referência, a data, o nome, o distrito, o concelho e a urgência.
 
 Para ver os pedidos: painel da Cloudflare → Storage & Databases → KV → `querorenovar-pedidos`.
 
@@ -86,7 +86,7 @@ src/lead/
   catalog.ts               Espaços, áreas, trabalhos, níveis de qualidade e urgência
   request.ts               Estado do pedido, regras puras (redutor), validação partilhada com o servidor
   store.ts                 Gravação no KV
-  concelhos.ts             Os 308 concelhos (sugestões no formulário)
+  concelhos.ts             Distritos e regiões autónomas com os 308 concelhos (listas do formulário)
   LeadProvider.tsx         Estado no navegador
 src/components/pedido/     Ecrãs dos passos
 src/components/ui/         Componentes base acessíveis (botão, cartão de escolha, campos, avisos)

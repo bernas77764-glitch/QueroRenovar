@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from "react";
+import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
 
 const control =
   "w-full rounded-xl border border-ink-300 bg-white px-3.5 py-2.5 text-base text-ink-900 placeholder:text-ink-500/80 focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-600/30";
@@ -51,6 +51,44 @@ export function TextField({ id, label, hint, optional, suffix, error, className 
         />
         {suffix && <span className="shrink-0 text-ink-700">{suffix}</span>}
       </div>
+      {error && (
+        <p id={`${id}-error`} className="mt-1.5 text-sm text-red-700">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+interface SelectFieldProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "id"> {
+  id: string;
+  label: string;
+  hint?: string;
+  /** First, empty option shown until the client chooses. */
+  placeholder: string;
+  options: string[];
+  error?: string;
+}
+
+export function SelectField({ id, label, hint, placeholder, options, error, className = "", ...props }: SelectFieldProps) {
+  const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
+  return (
+    <div className={className}>
+      <FieldLabel htmlFor={id} label={label} hint={hint} />
+      <select
+        id={id}
+        className={`${control} disabled:cursor-not-allowed disabled:bg-ink-100 ${error ? "border-red-400" : ""}`}
+        aria-describedby={describedBy}
+        aria-invalid={error ? true : undefined}
+        {...props}
+      >
+        <option value="">{placeholder}</option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
       {error && (
         <p id={`${id}-error`} className="mt-1.5 text-sm text-red-700">
           {error}

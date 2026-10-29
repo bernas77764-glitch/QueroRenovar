@@ -17,6 +17,7 @@ import {
   type SpaceTypeId,
   type UrgencyId,
 } from "./catalog";
+import { concelhosOf } from "./concelhos";
 
 /*
  * The client's request and the pure operations on it. The same validation runs
@@ -54,6 +55,7 @@ export interface Contact {
   name: string;
   email: string;
   phone: string;
+  district: string;
   municipality: string;
   acceptedTerms: boolean;
 }
@@ -216,9 +218,9 @@ export function contactIssues(contact: Contact): Partial<Record<ContactField, st
   else if (name.length > 100) issues.name = "O nome é demasiado longo.";
   if (!EMAIL_PATTERN.test(contact.email.trim()) || contact.email.length > 200) issues.email = "Indique um email válido.";
   if (!isValidPhone(contact.phone)) issues.phone = "Indique um número de telefone válido, por exemplo 912 345 678.";
-  const municipality = contact.municipality.trim();
-  if (municipality.length < 2) issues.municipality = "Indique o concelho onde será feita a obra.";
-  else if (municipality.length > 80) issues.municipality = "O concelho é demasiado longo.";
+  const municipalities = concelhosOf(contact.district);
+  if (municipalities.length === 0) issues.district = "Escolha o distrito onde será feita a obra.";
+  else if (!municipalities.includes(contact.municipality)) issues.municipality = "Escolha o concelho onde será feita a obra.";
   if (!contact.acceptedTerms) issues.acceptedTerms = "Para receber propostas tem de aceitar os Termos e Condições.";
   return issues;
 }
@@ -375,7 +377,8 @@ export function parseSubmission(body: unknown): ParseResult {
     name: str(c.name, 200),
     email: str(c.email, 300),
     phone: str(c.phone, 40),
-    municipality: str(c.municipality, 200),
+    district: str(c.district, 100),
+    municipality: str(c.municipality, 100),
     acceptedTerms: c.acceptedTerms === true,
   };
 
@@ -391,7 +394,8 @@ export function summarize({ request, contact }: Submission): string {
     `Nome: ${contact.name.trim()}`,
     `Email: ${contact.email.trim()}`,
     `Telefone: ${contact.phone.trim()}`,
-    `Concelho: ${contact.municipality.trim()}`,
+    `Distrito: ${contact.district}`,
+    `Concelho: ${contact.municipality}`,
     `Urgência: ${describeUrgency(request.urgency)}`,
     "",
     "Espaços:",
