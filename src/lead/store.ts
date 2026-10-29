@@ -50,7 +50,8 @@ export async function saveLead(store: PedidosStore, body: unknown, receivedAt = 
       reference,
       receivedAt: lead.receivedAt,
       name: contact.name.trim().slice(0, 100),
-      municipality: contact.municipality.trim().slice(0, 80),
+      district: contact.district,
+      municipality: contact.municipality,
       urgency: request.urgency,
     },
   });

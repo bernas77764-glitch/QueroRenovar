@@ -15,6 +15,7 @@ const contact: Contact = {
   name: "Rui Costa",
   email: "rui@example.pt",
   phone: "+351 963 000 111",
+  district: "Porto",
   municipality: "Porto",
   acceptedTerms: true,
 };
@@ -43,7 +44,7 @@ describe("saveLead", () => {
     expect(lead.receivedAt).toBe("2026-10-29T10:00:00.000Z");
     expect(lead.contact.acceptedTerms).toBe(true);
     expect(lead.summary).toContain("Concelho: Porto");
-    expect(stored.metadata).toMatchObject({ name: "Rui Costa", municipality: "Porto", urgency: "imediato" });
+    expect(stored.metadata).toMatchObject({ name: "Rui Costa", district: "Porto", municipality: "Porto", urgency: "imediato" });
 
     const retry = await saveLead(store, { request, contact }, new Date("2026-10-29T10:05:00Z"));
     expect(retry).toEqual(first);

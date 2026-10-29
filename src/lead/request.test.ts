@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { SPACE_TYPES, WORKS } from "./catalog";
-import { CONCELHOS } from "./concelhos";
+import { concelhosOf, DISTRITOS } from "./concelhos";
 import {
   contactIssues,
   createRequest,
@@ -22,6 +22,7 @@ const validContact: Contact = {
   name: "Ana Silva",
   email: "ana@example.pt",
   phone: "912 345 678",
+  district: "Lisboa",
   municipality: "Lisboa",
   acceptedTerms: true,
 };
@@ -55,9 +56,12 @@ describe("catalog", () => {
     expect(new Set(WORKS.map((w) => w.id)).size).toBe(WORKS.length);
   });
 
-  it("lists the 308 municipalities once each", () => {
-    expect(CONCELHOS).toHaveLength(308);
-    expect(new Set(CONCELHOS).size).toBe(308);
+  it("lists 18 districts, 2 regions and 308 municipalities, unique within each district", () => {
+    expect(DISTRITOS).toHaveLength(20);
+    expect(DISTRITOS.flatMap((d) => d.concelhos)).toHaveLength(308);
+    for (const d of DISTRITOS) expect(new Set(d.concelhos).size).toBe(d.concelhos.length);
+    expect(concelhosOf("Região Autónoma da Madeira")).toContain("Calheta");
+    expect(concelhosOf("Nenhum")).toEqual([]);
   });
 });
 
@@ -133,8 +137,14 @@ describe("contact", () => {
 
   it("requires every field and the terms", () => {
     expect(contactIssues(validContact)).toEqual({});
-    const issues = contactIssues({ name: "", email: "x", phone: "1", municipality: "", acceptedTerms: false });
-    expect(Object.keys(issues).sort()).toEqual(["acceptedTerms", "email", "municipality", "name", "phone"]);
+    const issues = contactIssues({ name: "", email: "x", phone: "1", district: "", municipality: "", acceptedTerms: false });
+    expect(Object.keys(issues).sort()).toEqual(["acceptedTerms", "district", "email", "name", "phone"]);
+  });
+
+  it("requires a municipality of the chosen district", () => {
+    expect(contactIssues({ ...validContact, municipality: "" })).toHaveProperty("municipality");
+    expect(contactIssues({ ...validContact, municipality: "Porto" })).toHaveProperty("municipality");
+    expect(contactIssues({ ...validContact, district: "Setúbal", municipality: "Almada" })).toEqual({});
   });
 });
 
@@ -148,6 +158,7 @@ describe("parseSubmission", () => {
     expect(result.submission.request).toEqual(request);
     expect(summarize(result.submission)).toContain("Pavimento (Médio)");
     expect(summarize(result.submission)).toContain("Quarto 1: 14,5 m²");
+    expect(summarize(result.submission)).toContain("Distrito: Lisboa");
   });
 
   it("rejects incomplete or malformed submissions", () => {
