@@ -13,6 +13,8 @@ interface ChoiceCardProps {
   /** Small badge shown next to the title, e.g. "Sujeito a avaliação". */
   badge?: string;
   compact?: boolean;
+  /** No border or rounding of its own, for a card drawn inside a larger bordered box. */
+  flat?: boolean;
 }
 
 /**
@@ -20,11 +22,15 @@ interface ChoiceCardProps {
  * screen readers and form semantics work as usual. Selection is shown by
  * border, background and a check mark — never by colour alone.
  */
-export function ChoiceCard({ type, name, value, checked, onChange, title, description, badge, compact }: ChoiceCardProps) {
+export function ChoiceCard({ type, name, value, checked, onChange, title, description, badge, compact, flat }: ChoiceCardProps) {
   return (
     <label
-      className={`flex cursor-pointer gap-3 rounded-xl border bg-white transition has-checked:border-brand-600 has-checked:bg-brand-50 has-focus-visible:ring-2 has-focus-visible:ring-brand-600 has-focus-visible:ring-offset-2 ${
-        checked ? "border-brand-600" : "border-ink-200 hover:border-ink-500"
+      className={`flex cursor-pointer gap-3 transition has-focus-visible:ring-2 has-focus-visible:ring-inset has-focus-visible:ring-brand-600 ${
+        flat
+          ? "bg-transparent"
+          : `rounded-xl border bg-white has-checked:border-brand-600 has-checked:bg-brand-50 ${
+              checked ? "border-brand-600" : "border-ink-200 hover:border-ink-500"
+            }`
       } ${compact ? "px-3 py-2.5" : "p-4"}`}
     >
       <input
