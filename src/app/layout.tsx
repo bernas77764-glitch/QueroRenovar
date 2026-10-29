@@ -12,6 +12,12 @@ export const metadata: Metadata = {
   },
   description:
     "Diga-nos que espaços quer remodelar e receba propostas de profissionais da sua zona, sem custos nem compromisso.",
+  openGraph: {
+    type: "website",
+    locale: "pt_PT",
+    siteName: "Quero Renovar",
+    images: [{ url: "/fundo-1200.jpg", width: 1200, height: 800, alt: "Profissional a aplicar massa numa parede" }],
+  },
 };
 
 export const viewport: Viewport = {
@@ -31,7 +37,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Saltar para o conteúdo
         </a>
         <header className="border-b border-ink-200 bg-white">
-          <div className="mx-auto flex h-16 w-full max-w-3xl items-center justify-between px-4">
+          <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-4">
             <Link href="/" className="flex items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2">
               <Image src="/logo.png" alt="Quero Renovar" width={549} height={65} priority className="h-7 w-auto sm:h-8" />
             </Link>
@@ -41,7 +47,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
         </main>
         <footer className="border-t border-ink-200 bg-white">
-          <div className="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-ink-500">
+          <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-ink-500">
             <p className="flex items-center gap-3">
               <Image src="/simbolo.svg" alt="" width={20} height={20} className="size-5 shrink-0" />
               Quero Renovar

@@ -49,3 +49,22 @@ body {
 dialog {
   margin: auto;
 }
+
+/*
+ * Background photo (public/fundo-*.webp, from the uploaded Fundo.jpg). The hands
+ * and tools sit left of centre, so the crop keeps them in view; text always sits
+ * on a navy gradient laid over it, never on the bare photo.
+ */
+.hero-photo {
+  background-color: var(--color-ink-900);
+  background-image: url("/fundo-960.webp");
+  background-size: cover;
+  background-position: 40% center;
+}
+
+@media (min-width: 640px) {
+  .hero-photo {
+    background-image: url("/fundo-1920.webp");
+    background-position: 65% center;
+  }
+}

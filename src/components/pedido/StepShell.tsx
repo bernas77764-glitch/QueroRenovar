@@ -48,26 +48,28 @@ export function StepShell({ step, title, intro, children }: StepShellProps) {
   const missing = ready ? firstIncompleteStepBefore(request, step) : null;
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:py-10">
-      <Progress current={step} />
-      {!ready ? (
-        <p className="text-ink-500" aria-busy="true">
-          A carregar o seu pedido…
-        </p>
-      ) : missing ? (
-        <Notice tone="pending" title="Falta completar um passo anterior">
-          <p>Antes deste passo, complete o passo «{missing.label}».</p>
-          <LinkButton href={missing.path} className="mt-3">
-            Ir para «{missing.label}»
-          </LinkButton>
-        </Notice>
-      ) : (
-        <>
-          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h1>
-          {intro && <div className="mt-2 text-ink-700">{intro}</div>}
-          <div className="mt-6">{children}</div>
-        </>
-      )}
+    <div className="mx-auto w-full max-w-3xl px-3 pb-10 pt-8 sm:px-4 sm:pb-16 sm:pt-14">
+      <div className="rounded-3xl border border-ink-200 bg-white p-5 shadow-xl shadow-ink-900/10 sm:p-8">
+        <Progress current={step} />
+        {!ready ? (
+          <p className="text-ink-500" aria-busy="true">
+            A carregar o seu pedido…
+          </p>
+        ) : missing ? (
+          <Notice tone="pending" title="Falta completar um passo anterior">
+            <p>Antes deste passo, complete o passo «{missing.label}».</p>
+            <LinkButton href={missing.path} className="mt-3">
+              Ir para «{missing.label}»
+            </LinkButton>
+          </Notice>
+        ) : (
+          <>
+            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h1>
+            {intro && <div className="mt-2 text-ink-700">{intro}</div>}
+            <div className="mt-6">{children}</div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
