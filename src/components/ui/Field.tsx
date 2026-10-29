@@ -32,16 +32,30 @@ interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "id
   hint?: string;
   optional?: boolean;
   suffix?: ReactNode;
+  /** Validation message; marks the input invalid and is read with it. */
+  error?: string;
 }
 
-export function TextField({ id, label, hint, optional, suffix, className = "", ...props }: TextFieldProps) {
+export function TextField({ id, label, hint, optional, suffix, error, className = "", ...props }: TextFieldProps) {
+  const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
   return (
     <div className={className}>
       <FieldLabel htmlFor={id} label={label} hint={hint} optional={optional} />
       <div className="flex items-center gap-2">
-        <input id={id} className={control} aria-describedby={hint ? `${id}-hint` : undefined} {...props} />
+        <input
+          id={id}
+          className={`${control} ${error ? "border-red-400" : ""}`}
+          aria-describedby={describedBy}
+          aria-invalid={error ? true : undefined}
+          {...props}
+        />
         {suffix && <span className="shrink-0 text-ink-700">{suffix}</span>}
       </div>
+      {error && (
+        <p id={`${id}-error`} className="mt-1.5 text-sm text-red-700">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
