@@ -119,6 +119,13 @@ Painel da Cloudflare → **Storage & Databases** → **KV** → `querorenovar-pe
 
 ## 6. O que fizemos, por ordem
 
+### 28 out 2026: arranque, marca e alojamento
+1. **Primeira versão do produto** (commit `f1c3ee9`), a partir do documento base (`docs/documento-base.md`): percurso divisão a divisão com catálogo de trabalhos, perguntas condicionais, revisão do projeto e esqueleto de estimativa; modelo de dados em `prisma/schema.prisma`. Foi substituída no dia seguinte pelo formulário de angariação, mas continua no histórico do Git (commit `a2bd555`) caso se queira recuperar o catálogo detalhado ou a lógica de estimativa.
+2. **Marca** (commit `96d3283`): o logotipo enviado em JPG foi convertido para `public/logo.png` (fundo transparente) e o símbolo recriado em SVG (`src/app/icon.svg`, `public/simbolo.svg`, ícone Apple). Paleta tirada do logotipo: azul-marinho `#08283d` e verde `#16a080`; nos botões e texto usa-se um verde mais escuro (`#0f7d63`) porque o verde do logotipo sobre branco não cumpre o contraste mínimo de acessibilidade.
+3. **Alojamento** (commits `e1be1a6`, `a2bd555`): escolhido Cloudflare Workers com o adaptador **OpenNext** (`@opennextjs/cloudflare`), e não o *vinext* da Cloudflare, por este ser experimental. Os **Cache Components** do Next.js 16 foram desativados em `next.config.ts` porque bloqueavam o worker no runtime da Cloudflare (confirmado em pré-visualização local). Deploy automático pelo GitHub Actions com os secrets `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID`.
+4. **Domínio na Cloudflare:** zona `querorenovar.pt` criada (plano Free, sem registos DNS anteriores) e nameservers alterados no dominios.pt (Servidores de Nome → personalizados, só os dois da Cloudflare).
+5. **Segurança:** um API token da Cloudflare foi colado numa conversa nesse dia. Deve ser apagado em Cloudflare → My Profile → API Tokens e substituído por um novo, também no secret do GitHub, se ainda não foi feito.
+
 ### 29 out 2026: domínio e DNS
 1. **Diagnóstico.** O `querorenovar.pt` não resolvia: o dominios.pt apontava para os seus servidores por defeito (`dnsX.host-redirect.com`), que recusavam os pedidos. A zona na Cloudflare estava `pending`, mas o worker e o endereço workers.dev já funcionavam.
 2. **Correção no dominios.pt:** os nameservers foram trocados para `harleigh.ns.cloudflare.com` e `kyree.ns.cloudflare.com`. Cerca de 30 minutos depois a zona ficou `active`.
@@ -169,7 +176,14 @@ Painel da Cloudflare → **Storage & Databases** → **KV** → `querorenovar-pe
 1. **Ligar o GitHub** à nova conta (claude.ai → Settings → Connectors → GitHub) e dar acesso ao repositório `bernas77764-glitch/QueroRenovar`.
 2. **Criar um ambiente** no Claude Code (web) com este repositório e:
    - variáveis de ambiente `CLOUDFLARE_API_TOKEN` (um token com permissões de Workers, Zone/DNS e KV) e `CLOUDFLARE_ACCOUNT_ID=0a66491f79a79d019048080b1da55fae`;
+   - acesso à rede *Limited* com gestores de pacotes permitidos e os domínios `api.cloudflare.com`, `cloudflare-dns.com`, `dns.google`, `querorenovar.pt`, `www.querorenovar.pt` e `querorenovar.bernardo-soares.workers.dev`;
    - script de configuração: `cd /home/user/QueroRenovar && npm ci`.
+
+### Se for preciso mudar o site para outra conta Cloudflare
+1. Na conta nova: *Add a domain* → `querorenovar.pt` → Free → colocar os novos nameservers no dominios.pt.
+2. Criar um namespace KV e pôr o id em `wrangler.jsonc` (`kv_namespaces[0].id`); para migrar pedidos, exportar as chaves `pedido:*` da conta antiga e importá-las com `wrangler kv key put`.
+3. Criar um API token (modelo *Edit Cloudflare Workers* + *Zone · DNS · Edit* + *Workers KV Storage · Edit*) e atualizar os secrets do GitHub com o token e o Account ID novos.
+4. Fazer push para `main` (ou `npm run deploy`): o worker e os domínios personalizados são criados pelo deploy.
 3. **Primeira mensagem para o Claude**, por exemplo:
    > Lê `docs/HISTORICO-DO-PROJETO.md` e o `README.md`. É o meu projeto Quero Renovar, já publicado em querorenovar.pt. Continua a partir das pendências.
 4. A forma de trabalhar que temos usado: o Claude trabalha num ramo, abre um pull request, espera que as verificações automáticas passem e faz o merge. O site publica-se sozinho cerca de 2 minutos depois.
